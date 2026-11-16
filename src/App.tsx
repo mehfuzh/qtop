@@ -1,7 +1,7 @@
 import React from 'react';
 import os from 'node:os';
 import { Box, Text, useApp, useInput } from 'ink';
-import { useStats } from './hooks/useStats.js';
+import { useStats, type History } from './hooks/useStats.js';
 import { useTerminalSize } from './hooks/useTerminalSize.js';
 import { CpuTile } from './components/CpuTile.js';
 import { GpuTile } from './components/GpuTile.js';
@@ -10,24 +10,19 @@ import { NetTile } from './components/NetTile.js';
 import { DiskTile } from './components/DiskTile.js';
 import { ProcTile } from './components/ProcTile.js';
 import { fmtUptime } from './lib/format.js';
+import type { Meta, Sample } from './lib/stats.js';
 
-export default function App() {
-  const { exit } = useApp();
-  const { sample, meta, hist, paused, setPaused } = useStats(1000);
-  const { columns, rows } = useTerminalSize();
+export interface DashboardProps {
+  sample: Sample;
+  meta: Meta;
+  hist: History;
+  paused: boolean;
+  columns: number;
+  rows: number;
+}
 
-  useInput((input, key) => {
-    if (input === 'q' || key.escape) exit();
-    if (input === ' ') setPaused((p) => !p);
-  });
-
-  if (columns < 80 || rows < 24) {
-    return <Text color="red">qtop needs a terminal of at least 80×24 (got {columns}×{rows})</Text>;
-  }
-  if (!sample || !meta) {
-    return <Text color="cyan">qtop: collecting stats…</Text>;
-  }
-
+/** Pure layout: everything the dashboard draws, with no hooks or I/O. */
+export function Dashboard({ sample, meta, hist, paused, columns, rows }: DashboardProps) {
   const leftW = Math.floor(columns * 0.62);
   const rightW = columns - leftW;
   const topH = Math.max(12, Math.floor(rows * 0.44));
@@ -67,5 +62,27 @@ export default function App() {
         <Text dimColor>q quit · space pause/resume</Text>
       </Box>
     </Box>
+  );
+}
+
+export default function App() {
+  const { exit } = useApp();
+  const { sample, meta, hist, paused, setPaused } = useStats(1000);
+  const { columns, rows } = useTerminalSize();
+
+  useInput((input, key) => {
+    if (input === 'q' || key.escape) exit();
+    if (input === ' ') setPaused((p) => !p);
+  });
+
+  if (columns < 80 || rows < 24) {
+    return <Text color="red">qtop needs a terminal of at least 80×24 (got {columns}×{rows})</Text>;
+  }
+  if (!sample || !meta) {
+    return <Text color="cyan">qtop: collecting stats…</Text>;
+  }
+
+  return (
+    <Dashboard sample={sample} meta={meta} hist={hist} paused={paused} columns={columns} rows={rows} />
   );
 }

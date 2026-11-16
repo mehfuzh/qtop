@@ -2,6 +2,8 @@
 
 A btop-like tiled system monitor for your terminal, built with TypeScript, Ink, and systeminformation.
 
+![qtop screenshot](docs/screenshot.png)
+
 ## Tiles
 - **CPU** — overall load, history graph, per-core bars
 - **GPU** — live utilization (macOS via `ioreg`, NVIDIA via `nvidia-smi`), VRAM when available
@@ -60,3 +62,11 @@ Manual test of the TUI (needs a real terminal at least 80×24):
 4. `space` pauses sampling (header shows ⏸ PAUSED), `space` again resumes
 5. Resize the terminal — layout should reflow; below 80×24 a warning is shown
 6. `q` or `Esc` quits cleanly
+
+## Screenshot
+The README screenshot is generated from real stats on this machine — it renders
+the actual tiles off-screen and converts the ANSI frame to an image:
+```sh
+npm run screenshot                                   # writes docs/screenshot.svg
+rsvg-convert --zoom=2 -o docs/screenshot.png docs/screenshot.svg   # brew install librsvg
+```
