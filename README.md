@@ -12,7 +12,19 @@ A btop-like tiled system monitor for your terminal, built with TypeScript, Ink, 
 - **Disk** — root filesystem usage + read/write throughput
 - **Processes** — top processes by CPU
 
-## Run
+## Install with curl (from the GitHub release)
+Requires Node.js 18+ and npm. Downloads the release source, builds it, and
+links the `qtop` command globally:
+```sh
+curl -fsSL https://raw.githubusercontent.com/mehfuzh/system-monitor/main/install.sh | bash
+```
+Pick a specific release with `QTOP_VERSION` (defaults to `v0.1.0`):
+```sh
+curl -fsSL https://raw.githubusercontent.com/mehfuzh/system-monitor/main/install.sh | QTOP_VERSION=v0.1.0 bash
+```
+Then run `qtop` from any terminal (at least 80×24). To uninstall: `npm unlink -g qtop`.
+
+## Run from source
 ```sh
 npm install
 npm run dev
@@ -70,3 +82,9 @@ the actual tiles off-screen and converts the ANSI frame to an image:
 npm run screenshot                                   # writes docs/screenshot.svg
 rsvg-convert --zoom=2 -o docs/screenshot.png docs/screenshot.svg   # brew install librsvg
 ```
+
+## Release
+Tagged releases live at https://github.com/mehfuzh/system-monitor/releases.
+To cut a new one: bump `version` in `package.json`, update `QTOP_VERSION`'s
+default in `install.sh`, then `git tag -a vX.Y.Z -m … && git push origin vX.Y.Z`
+and `gh release create vX.Y.Z`.
