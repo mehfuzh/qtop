@@ -11,12 +11,13 @@ interface Props {
   net: SI.NetworkStatsData | null;
   rxHist: number[];
   txHist: number[];
+  selected?: boolean;
 }
 
-export function NetTile({ width, height, net, rxHist, txHist }: Props) {
+export function NetTile({ width, height, net, rxHist, txHist, selected }: Props) {
   const inner = width - 4;
   return (
-    <Tile title={`Network${net ? ` · ${net.iface}` : ''}`} color="blue" width={width} height={height}>
+    <Tile title={`Network${net ? ` · ${net.iface}` : ''}`} color="blue" width={width} height={height} selected={selected}>
       {net ? (
         <>
           <Text color="cyan">{spark(rxHist, inner, 0)}</Text>

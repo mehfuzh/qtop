@@ -12,6 +12,10 @@ A btop-like tiled system monitor for your terminal, built with TypeScript, Ink, 
 - **Disk** — root filesystem usage + read/write throughput
 - **Processes** — top processes by CPU
 
+Tiles are movable: `Tab` selects a tile (white border, ◆ marker) and the arrow
+keys swap it with the neighbouring tile in that direction. The slot sizes stay
+fixed, so any tile can live in any slot and the layout still reflows on resize.
+
 ## Install with curl (from the GitHub release)
 Requires Node.js 18+ and npm. Downloads the release source, builds it, and
 links the `qtop` command globally:
@@ -33,6 +37,8 @@ npm run dev
 ## Keys
 - `q` / `Esc` / `Ctrl+C` — quit
 - `space` — pause/resume sampling
+- `Tab` / `Shift+Tab` — select next/previous tile
+- `←` `↑` `↓` `→` — move the selected tile (swaps with its neighbour)
 
 ## Build
 ```sh
@@ -60,6 +66,7 @@ Automated tests (Node's built-in test runner via tsx — no extra dependencies):
 npm test
 ```
 - `tests/format.test.ts` / `tests/graph.test.ts` — unit tests for formatting and graph rendering
+- `tests/layout.test.ts` — unit tests for tile moving/selection
 - `tests/stats.test.ts` — smoke test that collects real stats from this machine and checks they're sane
 
 Type-check without emitting:
@@ -73,7 +80,9 @@ Manual test of the TUI (needs a real terminal at least 80×24):
 3. Generate load (e.g. a download or `yes > /dev/null`) and watch CPU/network/process tiles react
 4. `space` pauses sampling (header shows ⏸ PAUSED), `space` again resumes
 5. Resize the terminal — layout should reflow; below 80×24 a warning is shown
-6. `q` or `Esc` quits cleanly
+6. `Tab` cycles the selected tile (white border); arrow keys swap it with its
+   neighbour; moving back restores the original arrangement
+7. `q` or `Esc` quits cleanly
 
 ## Screenshot
 The README screenshot is generated from real stats on this machine — it renders

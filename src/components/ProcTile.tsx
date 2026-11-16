@@ -7,13 +7,14 @@ interface Props {
   width: number;
   height: number;
   procs: SI.ProcessesProcessData[];
+  selected?: boolean;
 }
 
 function cpuColor(cpu: number): string | undefined {
   return cpu > 50 ? 'red' : cpu > 20 ? 'yellow' : undefined;
 }
 
-export function ProcTile({ width, height, procs }: Props) {
+export function ProcTile({ width, height, procs, selected }: Props) {
   const inner = width - 4;
   const maxRows = Math.max(1, height - 4);
   const nameW = Math.max(8, inner - 30);
@@ -27,7 +28,7 @@ export function ProcTile({ width, height, procs }: Props) {
     'COMMAND';
 
   return (
-    <Tile title="Processes · top by CPU" color="cyan" width={width} height={height}>
+    <Tile title="Processes · top by CPU" color="cyan" width={width} height={height} selected={selected}>
       <Text dimColor wrap="truncate-end">{header}</Text>
       {rows.map((p) => (
         <Text key={p.pid} wrap="truncate-end">

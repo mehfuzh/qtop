@@ -9,9 +9,10 @@ interface Props {
   width: number;
   height: number;
   mem: SI.MemData;
+  selected?: boolean;
 }
 
-export function MemTile({ width, height, mem }: Props) {
+export function MemTile({ width, height, mem, selected }: Props) {
   const inner = width - 4;
   const barW = Math.max(4, inner - 6);
   const used = mem.total - mem.available;
@@ -19,7 +20,7 @@ export function MemTile({ width, height, mem }: Props) {
   const swapPct = mem.swaptotal > 0 ? (mem.swapused / mem.swaptotal) * 100 : 0;
 
   return (
-    <Tile title="Memory" color="yellow" width={width} height={height}>
+    <Tile title="Memory" color="yellow" width={width} height={height} selected={selected}>
       <Text>
         <Text color={loadColor(usedPct)}>{bar(usedPct, barW)}</Text> {padPct(usedPct)}%
       </Text>

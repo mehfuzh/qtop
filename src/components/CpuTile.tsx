@@ -11,9 +11,10 @@ interface Props {
   brand: string;
   load: SI.CurrentLoadData;
   history: number[];
+  selected?: boolean;
 }
 
-export function CpuTile({ width, height, brand, load, history }: Props) {
+export function CpuTile({ width, height, brand, load, history, selected }: Props) {
   const inner = width - 4;
   const overall = load.currentLoad;
   const maxCores = Math.max(1, height - 6);
@@ -21,7 +22,7 @@ export function CpuTile({ width, height, brand, load, history }: Props) {
   const cores = load.cpus.slice(0, maxCores);
 
   return (
-    <Tile title="CPU" color="green" width={width} height={height}>
+    <Tile title="CPU" color="green" width={width} height={height} selected={selected}>
       <Text wrap="truncate-end">
         {brand}  <Text color={loadColor(overall)} bold>{padPct(overall)}%</Text>
       </Text>

@@ -10,13 +10,14 @@ interface Props {
   height: number;
   gpu: GpuStats;
   history: number[];
+  selected?: boolean;
 }
 
-export function GpuTile({ width, height, gpu, history }: Props) {
+export function GpuTile({ width, height, gpu, history, selected }: Props) {
   const inner = width - 4;
   const barW = Math.max(4, inner - 6);
   return (
-    <Tile title="GPU" color="magenta" width={width} height={height}>
+    <Tile title="GPU" color="magenta" width={width} height={height} selected={selected}>
       <Text wrap="truncate-end">{gpu.name}</Text>
       {gpu.util != null ? (
         <>

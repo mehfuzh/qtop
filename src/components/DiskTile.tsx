@@ -10,13 +10,14 @@ interface Props {
   height: number;
   disk: SI.FsSizeData | null;
   fsio: SI.FsStatsData | null;
+  selected?: boolean;
 }
 
-export function DiskTile({ width, height, disk, fsio }: Props) {
+export function DiskTile({ width, height, disk, fsio, selected }: Props) {
   const inner = width - 4;
   const barW = Math.max(4, inner - 6);
   return (
-    <Tile title={`Disk${disk ? ` · ${disk.mount}` : ''}`} color="red" width={width} height={height}>
+    <Tile title={`Disk${disk ? ` · ${disk.mount}` : ''}`} color="red" width={width} height={height} selected={selected}>
       {disk ? (
         <>
           <Text>
