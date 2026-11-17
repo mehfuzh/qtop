@@ -16,8 +16,8 @@ Requirements: Node.js 18+ and npm (the same floor the `install.sh` installer
 enforces).
 
 ```sh
-git clone git@github.com:mehfuzh/system-monitor.git
-cd system-monitor
+git clone git@github.com:mehfuzh/qtop.git
+cd qtop
 npm install
 npm run dev        # run the TUI from source (needs a real terminal ≥ 80×24)
 ```
@@ -66,7 +66,7 @@ npm run dev        # run the TUI from source (needs a real terminal ≥ 80×24)
 
 ## Reporting bugs
 
-Open an issue at https://github.com/mehfuzh/system-monitor/issues with:
+Open an issue at https://github.com/mehfuzh/qtop/issues with:
 - OS and version, Node version (`node --version`), terminal emulator and size
 - Steps to reproduce, expected vs. actual behaviour
 - Which tile(s) are affected, and whether `npm test` passes on your machine

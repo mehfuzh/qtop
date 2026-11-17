@@ -1,10 +1,10 @@
 #!/usr/bin/env bash
 # qtop installer: fetch a release tarball from GitHub, build, and link `qtop`.
-#   curl -fsSL https://raw.githubusercontent.com/mehfuzh/system-monitor/main/install.sh | bash
+#   curl -fsSL https://raw.githubusercontent.com/mehfuzh/qtop/main/install.sh | bash
 # Override the release with QTOP_VERSION=v0.2.0 (defaults to v0.1.0).
 set -euo pipefail
 
-REPO="mehfuzh/system-monitor"
+REPO="mehfuzh/qtop"
 VERSION="${QTOP_VERSION:-v0.1.0}"
 
 die() { echo "qtop install: $*" >&2; exit 1; }
@@ -25,7 +25,7 @@ echo "Downloading qtop $VERSION…"
 curl -fsSL "$url" -o "$tmp/qtop.tar.gz" || die "download failed: $url (does the tag exist?)"
 tar -xzf "$tmp/qtop.tar.gz" -C "$tmp"
 
-src="$tmp/system-monitor-${VERSION#v}"
+src="$tmp/qtop-${VERSION#v}"
 [ -d "$src" ] || die "unexpected archive layout"
 cd "$src"
 
