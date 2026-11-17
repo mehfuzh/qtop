@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "description": "btop-like tiled system monitor TUI",
   "type": "module",
+  "license": "MIT",
   "bin": { "qtop": "dist/index.js" },
   "scripts": {
     "dev": "tsx src/index.tsx",

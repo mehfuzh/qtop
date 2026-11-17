@@ -97,3 +97,10 @@ Tagged releases live at https://github.com/mehfuzh/system-monitor/releases.
 To cut a new one: bump `version` in `package.json`, update `QTOP_VERSION`'s
 default in `install.sh`, then `git tag -a vX.Y.Z -m … && git push origin vX.Y.Z`
 and `gh release create vX.Y.Z`.
+
+## Contributing
+Contributions are welcome — see [CONTRIBUTING.md](CONTRIBUTING.md) for setup,
+testing expectations, and pull request guidelines.
+
+## License
+[MIT](LICENSE) © mehfuzh
