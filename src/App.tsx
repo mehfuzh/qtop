@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import os from 'node:os';
 import { Box, Text, useApp, useInput } from 'ink';
 import { useStats, type History } from './hooks/useStats.js';
@@ -24,12 +24,14 @@ export interface DashboardProps {
   layout?: TileId[];
   /** selected slot, or -1 for no selection highlight */
   selected?: number;
+  /** wave animation phase in radians; advance it to move the 3-D waves */
+  phase?: number;
 }
 
 /** Pure layout: everything the dashboard draws, with no hooks or I/O. */
 export function Dashboard({
   sample, meta, hist, paused, columns, rows,
-  layout = DEFAULT_LAYOUT, selected = -1,
+  layout = DEFAULT_LAYOUT, selected = -1, phase = 0,
 }: DashboardProps) {
   const leftW = Math.floor(columns * 0.62);
   const rightW = columns - leftW;
@@ -43,13 +45,13 @@ export function Dashboard({
     const isSelected = slot === selected;
     switch (layout[slot]) {
       case 'cpu':
-        return <CpuTile width={width} height={height} brand={meta.cpuBrand} load={sample.cpu} history={hist.cpu} selected={isSelected} />;
+        return <CpuTile width={width} height={height} brand={meta.cpuBrand} load={sample.cpu} history={hist.cpu} selected={isSelected} phase={phase} />;
       case 'gpu':
-        return <GpuTile width={width} height={height} gpu={sample.gpu} history={hist.gpu} selected={isSelected} />;
+        return <GpuTile width={width} height={height} gpu={sample.gpu} history={hist.gpu} selected={isSelected} phase={phase} />;
       case 'mem':
         return <MemTile width={width} height={height} mem={sample.mem} selected={isSelected} />;
       case 'net':
-        return <NetTile width={width} height={height} net={sample.net} rxHist={hist.rx} txHist={hist.tx} selected={isSelected} />;
+        return <NetTile width={width} height={height} net={sample.net} rxHist={hist.rx} txHist={hist.tx} selected={isSelected} phase={phase} />;
       case 'disk':
         return <DiskTile width={width} height={height} disk={sample.disk} fsio={sample.fsio} selected={isSelected} />;
       case 'proc':
@@ -96,6 +98,14 @@ export default function App() {
   const { sample, meta, hist, paused, setPaused } = useStats(1000);
   const { columns, rows } = useTerminalSize();
   const [tiles, setTiles] = useState<TileState>({ layout: DEFAULT_LAYOUT, sel: 0 });
+  const [phase, setPhase] = useState(0);
+
+  // animate the 3-D waves (~8 fps); freeze while sampling is paused
+  useEffect(() => {
+    if (paused) return;
+    const id = setInterval(() => setPhase((p) => p + 0.45), 120);
+    return () => clearInterval(id);
+  }, [paused]);
 
   useInput((input, key) => {
     if (input === 'q' || key.escape) exit();
@@ -126,6 +136,7 @@ export default function App() {
       rows={rows}
       layout={tiles.layout}
       selected={tiles.sel}
+      phase={phase}
     />
   );
 }

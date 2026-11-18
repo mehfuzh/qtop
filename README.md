@@ -5,10 +5,13 @@ A btop-like tiled system monitor for your terminal, built with TypeScript, Ink, 
 ![qtop screenshot](docs/screenshot.png)
 
 ## Tiles
-- **CPU** — overall load, history graph, per-core bars
+- **CPU** — overall load, animated 3-D wave history, per-core bars
 - **GPU** — live utilization (macOS via `ioreg`, NVIDIA via `nvidia-smi`), VRAM when available
 - **Memory** — RAM + swap usage
-- **Network** — download/upload rates with auto-scaling sparklines
+- **Network** — download/upload rates with auto-scaling 3-D waves
+
+CPU/GPU/Network histories render as moving 3-D wave bars: solid front bars
+with a rippling back wall for depth, animated ~8×/s (frozen while paused).
 - **Disk** — root filesystem usage + read/write throughput
 - **Processes** — top processes by CPU
 
