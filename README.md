@@ -25,9 +25,9 @@ links the `qtop` command globally:
 ```sh
 curl -fsSL https://raw.githubusercontent.com/mehfuzh/qtop/main/install.sh | bash
 ```
-Pick a specific release with `QTOP_VERSION` (defaults to `v0.1.0`):
+Pick a specific release with `QTOP_VERSION` (defaults to `v0.2.0`):
 ```sh
-curl -fsSL https://raw.githubusercontent.com/mehfuzh/qtop/main/install.sh | QTOP_VERSION=v0.1.0 bash
+curl -fsSL https://raw.githubusercontent.com/mehfuzh/qtop/main/install.sh | QTOP_VERSION=v0.2.0 bash
 ```
 Then run `qtop` from any terminal (at least 80×24). To uninstall: `npm unlink -g qtop`.
 

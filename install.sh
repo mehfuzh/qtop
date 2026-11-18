@@ -1,11 +1,11 @@
 #!/usr/bin/env bash
 # qtop installer: fetch a release tarball from GitHub, build, and link `qtop`.
 #   curl -fsSL https://raw.githubusercontent.com/mehfuzh/qtop/main/install.sh | bash
-# Override the release with QTOP_VERSION=v0.2.0 (defaults to v0.1.0).
+# Override the release with QTOP_VERSION=v0.1.0 (defaults to v0.2.0).
 set -euo pipefail
 
 REPO="mehfuzh/qtop"
-VERSION="${QTOP_VERSION:-v0.1.0}"
+VERSION="${QTOP_VERSION:-v0.2.0}"
 
 die() { echo "qtop install: $*" >&2; exit 1; }
 
