@@ -2,19 +2,21 @@ import React from 'react';
 import { Text } from 'ink';
 import type { Systeminformation as SI } from 'systeminformation';
 import { Tile } from './Tile.js';
+import { COLOR_THEME, resolveColor, type Theme } from '../lib/theme.js';
 
 interface Props {
   width: number;
   height: number;
   procs: SI.ProcessesProcessData[];
   selected?: boolean;
+  theme?: Theme;
 }
 
 function cpuColor(cpu: number): string | undefined {
   return cpu > 50 ? 'red' : cpu > 20 ? 'yellow' : undefined;
 }
 
-export function ProcTile({ width, height, procs, selected }: Props) {
+export function ProcTile({ width, height, procs, selected, theme = COLOR_THEME }: Props) {
   const inner = width - 4;
   const maxRows = Math.max(1, height - 4);
   const nameW = Math.max(8, inner - 30);
@@ -28,13 +30,13 @@ export function ProcTile({ width, height, procs, selected }: Props) {
     'COMMAND';
 
   return (
-    <Tile title="Processes · top by CPU" color="cyan" width={width} height={height} selected={selected}>
+    <Tile title="Processes · top by CPU" id="proc" theme={theme} width={width} height={height} selected={selected}>
       <Text dimColor wrap="truncate-end">{header}</Text>
       {rows.map((p) => (
         <Text key={p.pid} wrap="truncate-end">
           {String(p.pid).padStart(7)}{' '}
           {(p.user ?? '').slice(0, 9).padEnd(9)}
-          <Text color={cpuColor(p.cpu)}>{p.cpu.toFixed(1).padStart(6)}</Text>
+          <Text color={resolveColor(theme, cpuColor(p.cpu))}>{p.cpu.toFixed(1).padStart(6)}</Text>
           {p.mem.toFixed(1).padStart(6)}{'  '}
           {p.name.slice(0, nameW)}
         </Text>

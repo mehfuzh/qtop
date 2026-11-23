@@ -37,9 +37,19 @@ npm install
 npm run dev
 ```
 
+## Themes
+Three built-in themes: `color` (default, btop-like colours and block glyphs),
+`white` and `dark` (one-colour, ASCII-only retro look). Pick one at launch:
+```sh
+qtop --theme=dark      # or: qtop --theme dark / qtop -t dark
+QTOP_THEME=white qtop
+```
+Press `t` at runtime to cycle through the themes.
+
 ## Keys
 - `q` / `Esc` / `Ctrl+C` — quit
 - `space` — pause/resume sampling
+- `t` — cycle theme (color → white → dark)
 - `Tab` / `Shift+Tab` — select next/previous tile
 - `←` `↑` `↓` `→` — move the selected tile (swaps with its neighbour)
 
