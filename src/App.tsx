@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import os from 'node:os';
 import { Box, Text, useApp, useInput } from 'ink';
 import { useStats, type History } from './hooks/useStats.js';
@@ -12,7 +12,6 @@ import { ProcTile } from './components/ProcTile.js';
 import { fmtUptime } from './lib/format.js';
 import { DEFAULT_LAYOUT, moveTile, cycleSelection, type TileId, type TileState, type Dir } from './lib/layout.js';
 import type { Meta, Sample } from './lib/stats.js';
-import { COLOR_THEME, getTheme, nextTheme, resolveColor, type Theme, type ThemeName } from './lib/theme.js';
 
 export interface DashboardProps {
   sample: Sample;
@@ -25,16 +24,12 @@ export interface DashboardProps {
   layout?: TileId[];
   /** selected slot, or -1 for no selection highlight */
   selected?: number;
-  /** wave animation phase in radians; advance it to move the 3-D waves */
-  phase?: number;
-  /** colour/glyph theme; defaults to the btop-like colour theme */
-  theme?: Theme;
 }
 
 /** Pure layout: everything the dashboard draws, with no hooks or I/O. */
 export function Dashboard({
   sample, meta, hist, paused, columns, rows,
-  layout = DEFAULT_LAYOUT, selected = -1, phase = 0, theme = COLOR_THEME,
+  layout = DEFAULT_LAYOUT, selected = -1,
 }: DashboardProps) {
   const leftW = Math.floor(columns * 0.62);
   const rightW = columns - leftW;
@@ -48,28 +43,28 @@ export function Dashboard({
     const isSelected = slot === selected;
     switch (layout[slot]) {
       case 'cpu':
-        return <CpuTile width={width} height={height} brand={meta.cpuBrand} load={sample.cpu} history={hist.cpu} selected={isSelected} phase={phase} theme={theme} />;
+        return <CpuTile width={width} height={height} brand={meta.cpuBrand} load={sample.cpu} selected={isSelected} />;
       case 'gpu':
-        return <GpuTile width={width} height={height} gpu={sample.gpu} history={hist.gpu} selected={isSelected} phase={phase} theme={theme} />;
+        return <GpuTile width={width} height={height} gpu={sample.gpu} history={hist.gpu} selected={isSelected} />;
       case 'mem':
-        return <MemTile width={width} height={height} mem={sample.mem} selected={isSelected} theme={theme} />;
+          return <MemTile width={width} height={height} mem={sample.mem} selected={isSelected} />;
       case 'net':
-        return <NetTile width={width} height={height} net={sample.net} rxHist={hist.rx} txHist={hist.tx} selected={isSelected} phase={phase} theme={theme} />;
+        return <NetTile width={width} height={height} net={sample.net} rxHist={hist.rx} txHist={hist.tx} selected={isSelected} />;
       case 'disk':
-        return <DiskTile width={width} height={height} disk={sample.disk} fsio={sample.fsio} selected={isSelected} theme={theme} />;
+          return <DiskTile width={width} height={height} disk={sample.disk} fsio={sample.fsio} selected={isSelected} />;
       case 'proc':
-        return <ProcTile width={width} height={height} procs={sample.procs} selected={isSelected} theme={theme} />;
+        return <ProcTile width={width} height={height} procs={sample.procs} selected={isSelected} />;
     }
   };
 
   return (
     <Box flexDirection="column" width={columns} height={rows}>
       <Box height={1} justifyContent="space-between" paddingX={1}>
-        <Text bold color={resolveColor(theme, 'magenta')}>qtop</Text>
+        <Text bold>qtop</Text>
         <Text dimColor>
           {os.hostname()} · up {fmtUptime(os.uptime())}
         </Text>
-        <Text color={paused ? resolveColor(theme, 'yellow') : undefined}>
+        <Text>
           {paused ? '⏸ PAUSED · ' : ''}{clock}
         </Text>
       </Box>
@@ -90,36 +85,21 @@ export function Dashboard({
       {tile(5, columns, procH)}
 
       <Box height={1} paddingX={1}>
-        <Text dimColor>q quit · space pause · t theme ({theme.label}) · tab select tile · ←↑↓→ move tile</Text>
+        <Text dimColor>q quit · space pause · tab select tile · ←↑↓→ move tile</Text>
       </Box>
     </Box>
   );
 }
 
-export interface AppProps {
-  /** theme chosen on the command line / from QTOP_THEME */
-  initialTheme?: Theme;
-}
-
-export function App({ initialTheme = COLOR_THEME }: AppProps) {
+export function App() {
   const { exit } = useApp();
   const { sample, meta, hist, paused, setPaused } = useStats(1000);
   const { columns, rows } = useTerminalSize();
   const [tiles, setTiles] = useState<TileState>({ layout: DEFAULT_LAYOUT, sel: 0 });
-  const [phase, setPhase] = useState(0);
-  const [themeName, setThemeName] = useState<ThemeName>(initialTheme.name);
-
-  // animate the 3-D waves (~8 fps); freeze while sampling is paused
-  useEffect(() => {
-    if (paused) return;
-    const id = setInterval(() => setPhase((p) => p + 0.45), 120);
-    return () => clearInterval(id);
-  }, [paused]);
 
   useInput((input, key) => {
     if (input === 'q' || key.escape) exit();
     if (input === ' ') setPaused((p) => !p);
-    if (input === 't') setThemeName((n) => nextTheme(n));
     if (key.tab) setTiles((t) => cycleSelection(t, key.shift));
     const dir: Dir | null = key.upArrow ? 'up'
       : key.downArrow ? 'down'
@@ -133,7 +113,7 @@ export function App({ initialTheme = COLOR_THEME }: AppProps) {
     return <Text color="red">qtop needs a terminal of at least 80×24 (got {columns}×{rows})</Text>;
   }
   if (!sample || !meta) {
-    return <Text color="cyan">qtop: collecting stats…</Text>;
+    return <Text>qtop: collecting stats…</Text>;
   }
 
   return (
@@ -146,8 +126,6 @@ export function App({ initialTheme = COLOR_THEME }: AppProps) {
       rows={rows}
       layout={tiles.layout}
       selected={tiles.sel}
-      phase={phase}
-      theme={getTheme(themeName)}
     />
   );
 }

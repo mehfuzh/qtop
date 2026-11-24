@@ -5,13 +5,14 @@ A btop-like tiled system monitor for your terminal, built with TypeScript, Ink, 
 ![qtop screenshot](docs/screenshot.png)
 
 ## Tiles
-- **CPU** — overall load, animated 3-D wave history, per-core bars
+- **CPU** — overall load, busy-core summary, per-core bars
 - **GPU** — live utilization (macOS via `ioreg`, NVIDIA via `nvidia-smi`), VRAM when available
 - **Memory** — RAM + swap usage
-- **Network** — download/upload rates with auto-scaling 3-D waves
+- **Network** — download/upload rates with auto-scaling sparklines
 
-CPU/GPU/Network histories render as moving 3-D wave bars: solid front bars
-with a rippling back wall for depth, animated ~8×/s (frozen while paused).
+GPU/Network histories render as simple single-line sparklines; usage
+bars are static blocks. No animations, no colour themes — plain terminal
+colours throughout.
 - **Disk** — root filesystem usage + read/write throughput
 - **Processes** — top processes by CPU
 
@@ -37,19 +38,9 @@ npm install
 npm run dev
 ```
 
-## Themes
-Three built-in themes: `color` (default, btop-like colours and block glyphs),
-`white` and `dark` (one-colour, ASCII-only retro look). Pick one at launch:
-```sh
-qtop --theme=dark      # or: qtop --theme dark / qtop -t dark
-QTOP_THEME=white qtop
-```
-Press `t` at runtime to cycle through the themes.
-
 ## Keys
 - `q` / `Esc` / `Ctrl+C` — quit
 - `space` — pause/resume sampling
-- `t` — cycle theme (color → white → dark)
 - `Tab` / `Shift+Tab` — select next/previous tile
 - `←` `↑` `↓` `→` — move the selected tile (swaps with its neighbour)
 
